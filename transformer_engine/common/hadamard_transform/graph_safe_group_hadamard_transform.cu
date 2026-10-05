@@ -462,7 +462,7 @@ void group_hadamard_transform_amax_graph_safe(const GroupedTensor* input, Groupe
   constexpr uint64_t kBuffDimX = 64;
   constexpr uint64_t kBuffDimY = 64;
 
-  alignas(64) CUtensorMap tensor_map_input{};
+  alignas(128) CUtensorMap tensor_map_input{};
 
   create_2D_tensor_map(
       /*tensorMap=*/tensor_map_input,

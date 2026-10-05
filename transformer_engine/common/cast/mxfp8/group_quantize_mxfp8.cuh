@@ -1243,10 +1243,10 @@ void group_quantize(const GroupedTensor *input, const GroupedTensor *activations
                             first_logical_dim, last_logical_dim, elts_total, num_tensors);
                         constexpr size_t block_size = ActiveCastTraits::THREADS_PER_CHUNK;
 
-                        alignas(64) CUtensorMap tensor_map_input{};
-                        alignas(64) CUtensorMap tensor_map_act_input{};
-                        alignas(64) CUtensorMap tensor_map_output_rowwise{};
-                        alignas(64) CUtensorMap tensor_map_output_colwise{};
+                        alignas(128) CUtensorMap tensor_map_input{};
+                        alignas(128) CUtensorMap tensor_map_act_input{};
+                        alignas(128) CUtensorMap tensor_map_output_rowwise{};
+                        alignas(128) CUtensorMap tensor_map_output_colwise{};
 
                         constexpr size_t input_type_bit_size = TypeInfo<IType>::size;
                         constexpr size_t output_type_bit_size = TypeInfo<OType>::size;

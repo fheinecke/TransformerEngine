@@ -492,9 +492,9 @@ void group_scaled_swiglu(const GroupedTensor *input, const Tensor *prob, const T
               TRANSFORMER_ENGINE_GROUP_TENSOR_SHAPE_REPRESENTATION_SWITCH(
                   shape_rep, SHAPE_REP,
                   {
-                    alignas(64) CUtensorMap tensor_map_input_act{};
-                    alignas(64) CUtensorMap tensor_map_input_gate{};
-                    alignas(64) CUtensorMap tensor_map_output_colwise{};
+                    alignas(128) CUtensorMap tensor_map_input_act{};
+                    alignas(128) CUtensorMap tensor_map_input_gate{};
+                    alignas(128) CUtensorMap tensor_map_output_colwise{};
 
                     constexpr size_t input_type_bit_size = TypeInfo<IType>::size;
                     constexpr size_t output_type_bit_size = TypeInfo<OType>::size;

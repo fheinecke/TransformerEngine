@@ -324,7 +324,7 @@ inline void group_compute_fused_amax(const Tensor &input, const Tensor *noop,
     NVTE_CHECK_CUDA(cudaGetLastError());
   }
 
-  alignas(64) CUtensorMap tensor_map_input{};
+  alignas(128) CUtensorMap tensor_map_input{};
   create_2D_tensor_map(tensor_map_input, input.data, rows, cols, FA_TILE_DIM_Y, FA_TILE_DIM_X, cols,
                        0, sizeof(__nv_bfloat16) * 8);
 
@@ -1169,8 +1169,8 @@ void group_quantize_transpose(const Tensor &input, const Tensor *noop,
 
   using IType = bf16;
 
-  alignas(64) CUtensorMap tensor_map_input{};
-  alignas(64) CUtensorMap tensor_map_output{};
+  alignas(128) CUtensorMap tensor_map_input{};
+  alignas(128) CUtensorMap tensor_map_output{};
   // alignas(64) CUtensorMap tensor_map_output_transpose{};
 
   create_2D_tensor_map(tensor_map_input, input.data, rows, cols, BUFF_DIM_Y, BUFF_DIM_X, cols, 0,

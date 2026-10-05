@@ -515,7 +515,7 @@ void fused_group_requantize(const Tensor &input, Tensor *output, const Tensor &t
     return;
   }
 
-  alignas(64) CUtensorMap output_tensor_map{};
+  alignas(128) CUtensorMap output_tensor_map{};
   create_2D_tensor_map(output_tensor_map, output->columnwise_data, num_rows, num_cols, kTileRows,
                        kTileCols, num_cols, 0, typeToNumBits(output->columnwise_data.dtype));
 

@@ -308,8 +308,8 @@ inline void dequantize(const Tensor &input, Tensor *output, cudaStream_t stream)
                   TRANSFORMER_ENGINE_SWITCH_CONDITION(
                       with_gemm_swizzled_scales, WITH_GEMM_SWIZZLED_SCALES,
 
-                      alignas(64) CUtensorMap tensor_map_input{};
-                      alignas(64) CUtensorMap tensor_map_output{};
+                      alignas(128) CUtensorMap tensor_map_input{};
+                      alignas(128) CUtensorMap tensor_map_output{};
 
                       create_2D_tensor_map(tensor_map_input, input_data, rows, cols, SHMEM_DIM_Y,
                                            SHMEM_DIM_X, cols, 0, typeToNumBits(input.dtype()));

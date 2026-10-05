@@ -453,8 +453,8 @@ inline void group_dequantize(const GroupedTensor *input, GroupedTensor *output,
       TRANSFORMER_ENGINE_TYPE_SWITCH_NON_FP8ONLY(
           output->dtype(), OType,
 
-          alignas(64) CUtensorMap tensor_map_input{};
-          alignas(64) CUtensorMap tensor_map_output{};
+          alignas(128) CUtensorMap tensor_map_input{};
+          alignas(128) CUtensorMap tensor_map_output{};
 
           create_2D_tensor_map(tensor_map_input, input_data, first_logical_dim, last_logical_dim,
                                SHMEM_DIM_Y, SHMEM_DIM_X, last_logical_dim, 0,

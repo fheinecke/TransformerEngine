@@ -306,11 +306,11 @@ void cast_gated_tma(const Tensor &gated_input, const Tensor &grad, Tensor *outpu
       TRANSFORMER_ENGINE_TYPE_SWITCH_OUTPUT(
           output->dtype(), OType,
 
-          alignas(64) CUtensorMap tensor_map_grad{};
-          alignas(64) CUtensorMap tensor_map_input_act{};
-          alignas(64) CUtensorMap tensor_map_input_gate{};
-          alignas(64) CUtensorMap tensor_map_output_act{};
-          alignas(64) CUtensorMap tensor_map_output_gate{};
+          alignas(128) CUtensorMap tensor_map_grad{};
+          alignas(128) CUtensorMap tensor_map_input_act{};
+          alignas(128) CUtensorMap tensor_map_input_gate{};
+          alignas(128) CUtensorMap tensor_map_output_act{};
+          alignas(128) CUtensorMap tensor_map_output_gate{};
 
           if constexpr (IS_BWD) {
             create_2D_tensor_map(tensor_map_grad, grad.data, rows, cols, SHMEM_DIM_Y, SHMEM_DIM_X,

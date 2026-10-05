@@ -762,9 +762,9 @@ inline void quantize_transpose_tuned_1D(const Tensor &input, const Tensor *noop,
     rng_state = reinterpret_cast<const size_t *>(rng_state_te_tensor.data.dptr);
   }
 
-  alignas(64) CUtensorMap tensor_map_input{};
-  alignas(64) CUtensorMap tensor_map_output{};
-  alignas(64) CUtensorMap tensor_map_output_transpose{};
+  alignas(128) CUtensorMap tensor_map_input{};
+  alignas(128) CUtensorMap tensor_map_output{};
+  alignas(128) CUtensorMap tensor_map_output_transpose{};
 
   create_2D_tensor_map(tensor_map_input, input.data, rows, cols, BUFF_DIM_Y, BUFF_DIM_X, cols, 0,
                        sizeof(IType) * 8);

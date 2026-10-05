@@ -766,13 +766,13 @@ void quantize_gated(const Tensor &gated_input, const Tensor &grad, Tensor *outpu
           TRANSFORMER_ENGINE_SWITCH_CONDITION(
               with_gemm_swizzled_scales, WITH_GEMM_SWIZZLED_SCALES,
 
-              alignas(64) CUtensorMap tensor_map_grad{};
-              alignas(64) CUtensorMap tensor_map_input_act{};
-              alignas(64) CUtensorMap tensor_map_input_gate{};
-              alignas(64) CUtensorMap tensor_map_output_act_rowwise{};
-              alignas(64) CUtensorMap tensor_map_output_gate_rowwise{};
-              alignas(64) CUtensorMap tensor_map_output_act_colwise{};
-              alignas(64) CUtensorMap tensor_map_output_gate_colwise{};
+              alignas(128) CUtensorMap tensor_map_grad{};
+              alignas(128) CUtensorMap tensor_map_input_act{};
+              alignas(128) CUtensorMap tensor_map_input_gate{};
+              alignas(128) CUtensorMap tensor_map_output_act_rowwise{};
+              alignas(128) CUtensorMap tensor_map_output_gate_rowwise{};
+              alignas(128) CUtensorMap tensor_map_output_act_colwise{};
+              alignas(128) CUtensorMap tensor_map_output_gate_colwise{};
 
               constexpr size_t input_type_bit_size = TypeInfo<IType>::size;
               constexpr size_t output_type_bit_size = TypeInfo<OType>::size;

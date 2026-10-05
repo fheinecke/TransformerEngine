@@ -885,7 +885,7 @@ void quantize(const Tensor &input, const Tensor *act_input, const Tensor *noop, 
                     NVTE_CHECK_CUDA(cudaFuncSetAttribute(
                         kernel, cudaFuncAttributeMaxDynamicSharedMemorySize, traits::smem));
                     // TMA for loading, so that we don't need STS for transposing
-                    alignas(64) CUtensorMap tensor_map_input{};
+                    alignas(128) CUtensorMap tensor_map_input{};
                     constexpr size_t input_type_bit_size = TypeInfo<IType>::size;
                     create_2D_tensor_map(tensor_map_input, input.data, rows, cols,
                                          traits::blockIterDim::M, traits::blockIterDim::N,
@@ -893,8 +893,8 @@ void quantize(const Tensor &input, const Tensor *act_input, const Tensor *noop, 
                                          /*offset_elems=*/0, input_type_bit_size,
                                          traits::input_swizzle_pattern);
 
-                    alignas(64) CUtensorMap tensor_map_rowwise_output{};
-                    alignas(64) CUtensorMap tensor_map_colwise_output{};
+                    alignas(128) CUtensorMap tensor_map_rowwise_output{};
+                    alignas(128) CUtensorMap tensor_map_colwise_output{};
                     constexpr size_t output_type_bit_size = TypeInfo<OType>::size;
                     create_2D_tensor_map(tensor_map_rowwise_output, output->data, rows, cols,
                                          traits::blockIterDim::M, traits::blockIterDim::N,
@@ -924,10 +924,10 @@ void quantize(const Tensor &input, const Tensor *act_input, const Tensor *noop, 
                 return;
               }
 
-              alignas(64) CUtensorMap tensor_map_input{};
-              alignas(64) CUtensorMap tensor_map_act_input{};
-              alignas(64) CUtensorMap tensor_map_output_rowwise{};
-              alignas(64) CUtensorMap tensor_map_output_colwise{};
+              alignas(128) CUtensorMap tensor_map_input{};
+              alignas(128) CUtensorMap tensor_map_act_input{};
+              alignas(128) CUtensorMap tensor_map_output_rowwise{};
+              alignas(128) CUtensorMap tensor_map_output_colwise{};
 
               constexpr size_t input_type_bit_size = TypeInfo<IType>::size;
               constexpr size_t output_type_bit_size = TypeInfo<OType>::size;

@@ -434,9 +434,9 @@ void quantize_2D(const Tensor &input, const Tensor *act_input, Tensor *output, T
       TRANSFORMER_ENGINE_TYPE_SWITCH_FP8ONLY(
           output->data.dtype, OType,
 
-          alignas(64) CUtensorMap tensor_map_input{};
-          alignas(64) CUtensorMap tensor_map_act_input{};
-          alignas(64) CUtensorMap tensor_map_output{};
+          alignas(128) CUtensorMap tensor_map_input{};
+          alignas(128) CUtensorMap tensor_map_act_input{};
+          alignas(128) CUtensorMap tensor_map_output{};
 
           create_2D_tensor_map(tensor_map_input, input.data, rows, cols, FP8_SHMEM_DIM_Y,
                                FP8_SHMEM_DIM_X, cols, 0, typeToNumBits(input.data.dtype));
