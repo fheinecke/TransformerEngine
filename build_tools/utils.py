@@ -99,14 +99,13 @@ def get_bolt_build_flags() -> Tuple[List[str], List[str]]:
         compiler_flags.append("-fno-reorder-blocks-and-partition")
     linker_flags = ["-Wl,--emit-relocs", "-Wl,-z,now"]
     if cxx_compiler_targets_arm64():
-        compiler_flags.extend(
-            [
-                "-mno-fix-cortex-a53-835769",
-                "-mno-fix-cortex-a53-843419",
-            ]
-        )
-        # The Cortex-A53 843419 workaround is applied by the linker.
-        linker_flags.append("-mno-fix-cortex-a53-843419")
+        compiler_flags.append("-mno-fix-cortex-a53-835769")
+        # The Cortex-A53 843419 workaround is applied by the linker. GCC may
+        # enable it by default; Clang only enables it for Android and rejects
+        # the flag for other targets.
+        if cxx_compiler_supports_flag("-mno-fix-cortex-a53-843419"):
+            compiler_flags.append("-mno-fix-cortex-a53-843419")
+            linker_flags.append("-mno-fix-cortex-a53-843419")
     return compiler_flags, linker_flags
 
 

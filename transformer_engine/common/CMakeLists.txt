@@ -33,15 +33,20 @@ check_cxx_compiler_flag("-fno-jump-tables"
 if(NVTE_TARGET_IS_ARM64)
   check_cxx_compiler_flag("-mno-fix-cortex-a53-835769"
                           NVTE_CXX_SUPPORTS_MNO_FIX_CORTEX_A53_835769)
-  check_cxx_compiler_flag("-mno-fix-cortex-a53-843419"
-                          NVTE_CXX_SUPPORTS_MNO_FIX_CORTEX_A53_843419)
+  # GCC may apply the Cortex-A53 843419 workaround by default. Clang only
+  # applies it for Android and rejects the flag for other targets.
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    check_cxx_compiler_flag("-mno-fix-cortex-a53-843419"
+                            NVTE_CXX_SUPPORTS_MNO_FIX_CORTEX_A53_843419)
+  endif()
 endif()
 if((CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
     AND NOT NVTE_CXX_SUPPORTS_FNO_REORDER_BLOCKS_AND_PARTITION)
     OR NOT NVTE_CXX_SUPPORTS_FNO_JUMP_TABLES
     OR (NVTE_TARGET_IS_ARM64
         AND (NOT NVTE_CXX_SUPPORTS_MNO_FIX_CORTEX_A53_835769
-            OR NOT NVTE_CXX_SUPPORTS_MNO_FIX_CORTEX_A53_843419)))
+            OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
+                AND NOT NVTE_CXX_SUPPORTS_MNO_FIX_CORTEX_A53_843419))))
   message(FATAL_ERROR
           "The host C++ compiler does not support the flags required for "
           "BOLT-compatible builds")
@@ -73,10 +78,16 @@ function(nvte_enable_bolt_compatible_compile_options TARGET_NAME)
       ${TARGET_NAME}
       PRIVATE
       $<$<COMPILE_LANGUAGE:CXX>:-mno-fix-cortex-a53-835769>
-      $<$<COMPILE_LANGUAGE:CXX>:-mno-fix-cortex-a53-843419>
       $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-mno-fix-cortex-a53-835769>
-      $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-mno-fix-cortex-a53-843419>
     )
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+      target_compile_options(
+        ${TARGET_NAME}
+        PRIVATE
+        $<$<COMPILE_LANGUAGE:CXX>:-mno-fix-cortex-a53-843419>
+        $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-mno-fix-cortex-a53-843419>
+      )
+    endif()
   endif()
 endfunction()
 
@@ -442,7 +453,7 @@ target_link_options(
   "LINKER:--emit-relocs"
   "LINKER:-z,now"
 )
-if(NVTE_TARGET_IS_ARM64)
+if(NVTE_TARGET_IS_ARM64 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # The Cortex-A53 843419 workaround is applied by the linker.
   target_link_options(
     transformer_engine
